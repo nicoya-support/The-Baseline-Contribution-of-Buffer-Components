@@ -1,0 +1,172 @@
+<!DOCTYPE HTML>
+<html lang="en">
+	<head>
+		<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
+		<title>Buffer Tool</title>
+		<meta content='width=device-width, initial-scale=1, shrink-to-fit=no' name='viewport'>
+		<link rel='stylesheet' href='style.css'>
+		<script src='https://cdn.jsdelivr.net/npm/chart.js'></script>
+	</head>
+	<body>
+		<div class='introcontainer'>
+			<h1>The Baseline Contribution of Buffer Components</h1>
+			<canvas id='absorbanceplot' style='width:100%;height:400px;max-width:1000px;'></canvas>
+		</div>
+		<div class='settingscontainer'>
+			<div class='pathlength'>
+				<span class='generalLabel'>Path length:</span>
+				<select class='pathlengthselect' id='pathlengthsel' onChange='onPathlengthChange();'>
+					<option value='10'>10</option>
+					<option value='5'>5</option>
+					<option value='4'>4</option>
+					<option value='2'>2</option>
+					<option value='1'>1</option>
+					<option value='0.5'>0.5</option>
+					<option value='0.2'>0.2</option>
+					<option value='0.1'>0.1</option>
+					<option value='0.01'>0.01</option>
+				</select>
+				<span id='pathlengthunit'>mm</span>
+			</div>
+			<div class='absorbance'>
+				<span class='generalLabel'>Absorbance ></span>
+				<input id='absorbance' class='absorbanceinput' value='2' type='number' min='1.5' max='2.5' step='0.1' onChange='onAbsChange(this);'>
+				<span>A.U. at</span>
+				<span id='excludedWLs'>-</span>
+				<span id='excludedWLsUnit'>nm</span>
+			</div>
+			<div class='conversion'>
+				<input type='checkbox' id='conversioncheckbox' name ='conversioncheckbox' value='autoconvert'><label for='conversioncheckbox' class='generalLabel'>Convert concentration when changing unit</label>
+			</div>
+		</div>
+		<div class='componentscontainer'>
+			<div class='header'>
+				<div class='colourcolumn'></div>
+				<div class='componentcolumn generalLabel'>Component</div>
+				<div class='slidercolumn'></div>
+				<div class='concentrationcolumn generalLabel'>Concentration</div>
+				<div class='unitcolumn generalLabel'>Unit</div>
+			</div>
+			<div class='components entries'>
+				<div class='component'>
+					<div class='colourcolumn'>
+						<span class='colourindicator'>&#9679;</span>
+					</div>
+					<div class='componentcolumn'>
+						<select class='componentselect'>
+						</select>
+					</div>
+					<div class='slidercolumn'>
+						<input class='slider' type='range' min='0' value='0'>
+					</div>
+					<div class='concentrationcolumn'>
+						<input class='concentrationinput' placeholder='0' type='number'>
+					</div>
+					<div class='unitcolumn'>
+						<select class='unitselect' onChange='onUnitChange(event);'>
+							<option value='% (v/v)'>% (v/v)</option>
+							<option value='M'>M</option>
+							<option value='mg/mL'>mg/mL</option>
+						</select>
+					</div>			
+					<div class='delbuttondiv'></div>
+				</div>
+			</div>
+			<div class='addbuttondiv'>
+				<button class="button add-btn">&plus;</button>
+			</div>
+			<div id='sum'><span class='sumSymbol'>&#9679;</span><span> Sum</span></div>
+		</div>
+		<div id='warning'><span id='warningtext' style='color:red'></span></div>
+		<h2>How to use</h2>
+		<div id="howto">
+			<ul>
+			<li>Click the + or - buttons to add or remove components, respectively.</li>
+			<li>Make a selection from the components drop-down menu to choose a new component.</li>
+			<li>Use the slider or enter a value to change a component concentration.</br>Use the up/down controls of the input field or the arrow keys to adjust a concentration more precisely.</li>
+			<li>Make a selection from the unit drop-down menu to change the concentration unit.</br>Have the 'Convert concentration when changing unit' checkbox ticked to automatically convert concentrations accordingly.</li>
+			<li>Choose a different optical path length from the path length drop-down menu, if desired.</li>
+			<li>Adjust the target absorbance cut-off value in the corresponding input field, if desired.</li>
+			</ul>
+			<p>Spectral regions where absorbance will be larger than the target absorbance cut-off are calculated based on all chosen components and settings and are reported in orange.</p>
+		</div>
+		<h2>Frequently asked questions</h2>
+		<div id="collapsibles">
+			<button type="button" class="collapsible">Why does the absorbance cut-off and / or spectral profile reported by your tool disagree with what I've measured?<span style="float:right;">+</span></button>
+			<div class="content">
+				<p>The data presented are for guidance only; they represent approximations and are not meant to serve as a replacement for blank measurements. Always measure your buffer baseline as usual for accurate and precise data.</p>
+				
+				<p>Absorbance cut-offs provided by the tool should be reasonable approximations within ±1 nm, but are subject to certain factors of uncertainty. For example, when comparing with your own data, some variance may occur depending on the state of your spectrometer, including calibration and how well the system has been purged with nitrogen.</p>
+				
+				<p>Moreover, please note that the tool assumes additivity of the chosen components, i.e.:
+				<ul>
+				<li>Potential spectral changes due to complex formation are not taken into account (e.g., selection of both MgCl<sub>2</sub> and EDTA, or selection of both surfactants and cyclodextrin).</li>
+				<li>Limitations regarding solubility or miscibility are not taken into account; i.e., chosen combinations / concentrations might not be physically possible.</li>
+				<li>Likewise, other potential interactions between components and their effect on absorbance are not taken into account.</li>
+				</ul>
+				</p>
+			</div>
+			<button type="button" class="collapsible">Why can't I make a certain selection / enter a certain value?<span style="float:right;">+</span></button>
+			<div class="content">
+				<p>Note that there are some deliberate constraints, e.g.:
+				<ul>
+				<li>The first component entry only allows selection of solvents to ensure that always at least one solvent is included; the concentration of this reference solvent will be adjusted if more solvents are added.</li>
+				<li>The input absorbance is limited to 2 ± 0.5 A.U. because accuracy of approximations is limited at lower and higher absorbance values.</li>
+				<li>Concentration ranges are either limited to maximum compound solubility (if known) or to arbitrary upper limits that are considered reasonable for typical applications.</li>
+				</ul>
+				</p>
+			</div>
+			<button type="button" class="collapsible">Why is there a discrepancy in concentration between your tool and my own data?<span style="float:right;">+</span></button>
+			<div class="content">
+				<p>Please note that, for components that allow selection of both molar (e.g., mM) and mass concentrations (e.g., mg/mL), mass concentrations refer to the anhydrous compound.</p>
+			</div>
+			<button type="button" class="collapsible">Why is the absorbance not approaching zero when I set the concentration(s) to zero?<span style="float:right;">+</span></button>
+			<div class="content">
+				<p>The absorbance shown is never zero—even at higher wavelengths—but always has a small offset of up to ~0.06 AU. This is due to a spectral contribution by the sample cuvette / cell itself.</p>
+			</div>
+			<button type="button" class="collapsible">Why does your tool lack data beyond 260 nm (i.e., in the near-UV range)?<span style="float:right;">+</span></button>
+			<div class="content">
+				<p>The spectral contribution of most buffers and excipients to CD or absorbance beyond the far-UV range is usually negligible and, therefore, higher wavelengths have been omitted.</p>
+			</div>
+			<button type="button" class="collapsible">Why is component x missing from your tool?<span style="float:right;">+</span></button>
+			<div class="content">
+				<p>Some components might have deliberately been excluded from the list; for example, sodium fluoride (NaF) is being excluded because its absorbance is negligible even at low molar concentrations.</p>
+			
+				<p>Our capacities for expanding the list of components are limited in terms of both time and materials. However, if you don't find a specific component that you are looking for in the list, you can help us expanding it by sending us a sample of your component. Please <a href="https://www.photophysics.com/contact/" target="_blank">contact</a> us!</p>
+			</div>
+		</div>
+		<!-- jQuery -->
+		<script crossorigin='anonymous' src='https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js'></script>
+		<script src='values.js'></script>
+		<script src='plotting.js'></script>
+		<script src='conversions.js'></script>
+		<script src='supporting.js'></script>
+		<script src='checks.js'></script>
+		<script src='main.js'></script>
+		<script>
+		$(document).ready(function () {initialise();});
+		
+		// Handle collapsibles behavior
+		var coll = document.getElementsByClassName("collapsible");
+		var i;
+
+		for (i = 0; i < coll.length; i++) {
+		  coll[i].addEventListener("click", function() {
+		    this.classList.toggle("active");
+		    var content = this.nextElementSibling;
+		    var symbol = this.lastChild;
+		    if (content.style.display === "block") {
+		      content.style.display = "none";
+		    } else {
+		      content.style.display = "block";
+		    }
+		    if (symbol.innerHTML === "-") {
+		      symbol.innerHTML = "+";
+		    } else {
+		      symbol.innerHTML = "-";
+		    }
+		  });
+		}
+		</script>
+	</body>
+</html>

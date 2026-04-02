@@ -1,0 +1,192 @@
+/*  load Inter font  */
+@font-face {
+  font-family: "Inter";
+  src: url("Inter-VariableFont_opsz,wght.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap; /* keep text visible until font loads */
+}
+
+body {
+  font-family: "Inter", sans-serif;
+}
+
+/* Style the button that is used to open and close the collapsible content */
+.collapsible {
+  font-family: "Inter", sans-serif;
+  background-color: #67cbdf;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.active,
+.collapsible:hover {
+  background-color: #91dae8;
+}
+
+/* Style the collapsible content. Note: hidden by default */
+.content {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  background-color: #e6e6e6;
+}
+
+ /* Change slider and radio button color */
+input[type="range"],input[type="radio"] {
+	accent-color: #67cbdf;
+}
+
+sub {
+    line-height: 0;
+}
+
+.absorbanceinput {
+	font-family: "Inter", sans-serif;
+	width: 40px;
+}
+
+.pathlengthselect {
+	font-family: "Inter", sans-serif;
+}
+
+.introcontainer {
+	width: 1000px;
+}
+
+.settingscontainer {
+	width: 1000px;
+	height: 40px;
+	display: flex;
+}
+
+.pathlength {
+	width: 200px;
+}
+
+.absorbance {
+	width: 400px;
+}
+
+#excludedWLs {
+	font-weight: bold;
+}
+
+.componentscontainer {
+	width: 1000px;
+}
+
+.header {
+	height: 20px;
+	display: flex;
+}
+
+.component {
+	width: 1000px;
+	height: 30px;
+	display: flex;
+}
+
+.colourcolumn {
+	width: 20px;
+	position: relative;
+}
+
+.componentcolumn {
+	width: 500px;
+	position: relative;
+}
+
+.slidercolumn {
+	width: 230px;
+	position: relative;
+}
+
+.concentrationcolumn {
+	width: 120px;
+	position: relative;
+}
+
+.unitcolumn {
+	width: 90px;
+	position: relative;
+}
+
+.componentselect {
+	font-family: "Inter", sans-serif;
+	width: 490px;
+	height: 26px;
+	position: absolute;
+	top: 0%;
+	overflow:scroll;
+}
+
+.slider {
+	width: 220px;
+	accent-color: #851764;
+}
+
+.concentrationinput {
+	font-family: "Inter", sans-serif;
+	width: 100px;
+	height: 20px;
+	position: absolute;
+	top: 0%;
+}
+
+.unitselect {
+	font-family: "Inter", sans-serif;
+	width: 75px;
+	height: 26px;
+	position: absolute;
+	top: 0%;
+}
+
+.button {
+	font-family: "Inter", sans-serif;
+	color: #ffffff;
+	background-color: #67cbdf;
+	height: 26px;
+	border: inherit;
+	font-size: 20px;
+	font-weight: bold;
+}
+
+.button:hover {
+	background-color: #91dae8;
+}
+
+.addbuttondiv {
+	float: right;
+}
+.delbuttondiv {
+	margin-left: auto;
+}
+
+.generalLabel {
+	font-weight: bold;
+}
+
+.sumSymbol {
+	color: #212b38;
+}
+
+#sum {
+	display: inline-block;
+}
+
+#warning {
+	display: inline-block;
+	opacity: 0;
+}
+
+#excludedWLs, #excludedWLsUnit {
+	color: rgb(233,194,89);
+}
